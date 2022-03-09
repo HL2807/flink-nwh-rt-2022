@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class DimUtil {
 
-    public static JSONObject getDimInfo(Connection connection, String tableName, String id) {
+    public static JSONObject getDimInfo(Connection connection, String tableName, String id) throws Exception {
         //查询phoenix之前先查询Redis
         Jedis jedis = RedisUtil.getJedis();
 
