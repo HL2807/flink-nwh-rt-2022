@@ -45,7 +45,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
 
     //value:{"db":"","tn":"","before":{},"after":{},"type":""}
     @Override
-    public void processBroadcastElement(String value, BroadcastProcessFunction<JSONObject, String, JSONObject>.Context ctx, Collector<JSONObject> out) throws Exception {
+    public void processBroadcastElement(String value, Context ctx, Collector<JSONObject> out) throws Exception {
         //获取并解析数据
         JSONObject jsonObject = JSON.parseObject(value);
         String data = jsonObject.getString("after");
@@ -61,11 +61,13 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
 
         //写入状态，广播出去
         BroadcastState<String, TableProcess> broadcastState = ctx.getBroadcastState(mapStateDescriptor);
-        String key = tableProcess.getSinkTable() + "-" + tableProcess.getOperateType();
+        String key = tableProcess.getSourceTable() + "-" + tableProcess.getOperateType();
         broadcastState.put(key, tableProcess);
     }
 
-    //建表语句 : create table if not exists db.tn(id varchar primary key,tm_name varchar) xxx;
+    /**
+     * 建表语句 : create table if not exists db.tn(id varchar primary key,tm_name varchar) xxx;
+     */
     private void checkTable(String sinkTable, String sinkColumns, String sinkPk, String sinkExtend) {
         PreparedStatement preparedStatement = null;
 
@@ -77,7 +79,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
                 sinkExtend = "";
             }
 
-            StringBuffer createTableSQL = new StringBuffer("create table if not exists")
+            StringBuffer createTableSQL = new StringBuffer("create table if not exists ")
                     .append(GmallConfig.HBASE_SCHEMA)
                     .append(".")
                     .append(sinkTable)
@@ -126,7 +128,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
 
     //value:{"db":"","tn":"","before":{},"after":{},"type":""}
     @Override
-    public void processElement(JSONObject value, BroadcastProcessFunction<JSONObject, String, JSONObject>.ReadOnlyContext ctx, Collector<JSONObject> out) throws Exception {
+    public void processElement(JSONObject value, ReadOnlyContext ctx, Collector<JSONObject> out) throws Exception {
         //获取状态数据
         ReadOnlyBroadcastState<String, TableProcess> broadcastState = ctx.getBroadcastState(mapStateDescriptor);
         String key = value.getString("tableName") + "-" + value.getString("type");
@@ -152,6 +154,12 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
         }
     }
 
+    /**
+     *
+     * @param data {"id":"11","tm_name":"lqs","log_url":"aa"}
+     * @param sinkColumns id,tm_name
+     *                    {"id":"11","tm_name":"lqs"}
+     */
     private void filterColumn(JSONObject data, String sinkColumns) {
         String[] fields = sinkColumns.split(",");
         List<String> columns = Arrays.asList(fields);
