@@ -141,7 +141,7 @@ public class TableProcessFunction extends BroadcastProcessFunction<JSONObject, S
             //分流
             //将输出表/主题信息写入value
             value.put("sinkTable", tableProcess.getSinkTable());
-            String sinkType = tableProcess.getSinkTable();
+            String sinkType = tableProcess.getSinkType();
             if (TableProcess.SINK_TYPE_KAFKA.equals(sinkType)) {
                 //kafka数据写入主流
                 out.collect(value);

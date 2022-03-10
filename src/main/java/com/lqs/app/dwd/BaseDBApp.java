@@ -98,15 +98,15 @@ public class BaseDBApp {
         kafka.print("kafka>>>>>>>>>>");
         hbase.print("hbase>>>>>>>>>>");
 
-        //hbase.addSink(new DimSinkFunction());
-        //kafka.addSink(MyKafkaUtil.getKafkaProducer(new KafkaSerializationSchema<JSONObject>() {
-        //
-        //    @Override
-        //    public ProducerRecord<byte[], byte[]> serialize(JSONObject element, @Nullable Long timestamp) {
-        //        return new ProducerRecord<byte[], byte[]>(element.getString("sinkTable"),
-        //                element.getString("after").getBytes());
-        //    }
-        //}));
+        hbase.addSink(new DimSinkFunction());
+        kafka.addSink(MyKafkaUtil.getKafkaProducer(new KafkaSerializationSchema<JSONObject>() {
+
+            @Override
+            public ProducerRecord<byte[], byte[]> serialize(JSONObject element, @Nullable Long timestamp) {
+                return new ProducerRecord<byte[], byte[]>(element.getString("sinkTable"),
+                        element.getString("after").getBytes());
+            }
+        }));
 
         //启动任务
         executionEnvironment.execute("BaseDBApp");
