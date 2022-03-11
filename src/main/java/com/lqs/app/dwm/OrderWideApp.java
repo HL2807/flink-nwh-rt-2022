@@ -108,7 +108,8 @@ public class OrderWideApp {
         //打印测试
         orderWideWithNoDimDs.print("orderWideWithNoDimDs>>>>>>>>>>>>");
 
-        //TODO 4、 关联维度信息
+        //TODO 4、关联维度信息
+
 
         //TODO 4.1、关联用户维度
 

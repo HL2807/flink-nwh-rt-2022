@@ -14,7 +14,7 @@ import java.util.List;
  * @Date 2022年03月09日 22:08:35
  * @Version 1.0.0
  * @ClassName JdbcUtil
- * @Describe
+ * @Describe 查询数据库维度表使用（SQL，hbase，phoenix）
  */
 public class JdbcUtil {
 
@@ -42,7 +42,8 @@ public class JdbcUtil {
             T t=clz.newInstance();
 
             //给泛型对象赋值
-            for (int i = 0; i < columnCount+1; i++) {
+            //获取是从索引1开始的而不是0
+            for (int i = 1; i < columnCount+1; i++) {
                 //获取列名
                 String columnName = metaData.getColumnName(i);
 
