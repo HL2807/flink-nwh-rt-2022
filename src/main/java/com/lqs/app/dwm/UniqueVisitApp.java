@@ -89,7 +89,7 @@ public class UniqueVisitApp {
                     //取出状态数据
                     String lastDate = dateState.value();
                     //取出今天的日期
-                    String curDate = simpleDateFormat.format(value.getString("ts"));
+                    String curDate = simpleDateFormat.format(value.getLong("ts"));
                     //判断两个日期是否相同
                     //lastDate可能为空，而curDate一定不为空，为此curDate放在前面
                     if (!curDate.equals(lastDate)) {
