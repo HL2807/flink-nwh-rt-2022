@@ -65,7 +65,7 @@ public class UserJumpDetailApp {
         SingleOutputStreamOperator<JSONObject> jsonObjDS = kafkaDS.map(JSON::parseObject)
                 .assignTimestampsAndWatermarks(WatermarkStrategy
                         //设置1秒的乱序时间
-                        .<JSONObject>forBoundedOutOfOrderness(Duration.ofSeconds(2))
+                        .<JSONObject>forBoundedOutOfOrderness(Duration.ofSeconds(1))
                         .withTimestampAssigner(new SerializableTimestampAssigner<JSONObject>() {
                             @Override
                             public long extractTimestamp(JSONObject element, long recordTimestamp) {
@@ -97,7 +97,7 @@ public class UserJumpDetailApp {
                     }
                 })
                 .times(2)
-                .consecutive()//指定严格近邻
+                .consecutive()//指定严格近邻(next)
                 .within(Time.seconds(10));
 
         //TODO 5、将模式序列作用到流上
@@ -107,7 +107,8 @@ public class UserJumpDetailApp {
         //TODO 6、提取匹配上的和超时事件
         OutputTag<JSONObject> timeOutTag = new OutputTag<JSONObject>("timeOut") {
         };
-        SingleOutputStreamOperator<JSONObject> selectDS = patternStream.select(timeOutTag, new PatternTimeoutFunction<JSONObject, JSONObject>() {
+        SingleOutputStreamOperator<JSONObject> selectDS = patternStream.select(timeOutTag,
+                new PatternTimeoutFunction<JSONObject, JSONObject>() {
                     @Override
                     public JSONObject timeout(Map<String, List<JSONObject>> map, long ts) throws Exception {
                         return map.get("start").get(0);
