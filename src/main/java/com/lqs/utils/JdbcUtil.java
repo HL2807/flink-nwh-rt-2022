@@ -64,15 +64,15 @@ public class JdbcUtil {
         }
 
         preparedStatement.close();
-        resultList.clear();
+        resultSet.close();
 
         //返回结果集合
         return resultList;
     }
 
-    public static void mani(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception{
 
-        //System.out.println(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, "aa_bb"));
+        System.out.println(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, "aa_bb"));
 
         Class.forName(GmallConfig.PHOENIX_DRIVER);
         Connection connection = DriverManager.getConnection(GmallConfig.PHOENIX_SERVER);

@@ -1,12 +1,15 @@
 package com.lqs.app.dwm;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.lqs.app.function.DimAsyncFunction;
 import com.lqs.bean.OrderDetail;
 import com.lqs.bean.OrderInfo;
 import com.lqs.bean.OrderWide;
 import com.lqs.utils.MyKafkaUtil;
 import org.apache.flink.api.common.eventtime.SerializableTimestampAssigner;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
+import org.apache.flink.streaming.api.datastream.AsyncDataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -14,7 +17,9 @@ import org.apache.flink.streaming.api.functions.co.ProcessJoinFunction;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author lqs
@@ -108,10 +113,46 @@ public class OrderWideApp {
         //打印测试
         orderWideWithNoDimDs.print("orderWideWithNoDimDs>>>>>>>>>>>>");
 
-        //TODO 4、关联维度信息
-
+        //TODO 4、关联维度信息 HBase Phoenix
+//        orderWideWithNoDimDS.map(orderWide -> {
+//            //关联用户维度
+//            Long user_id = orderWide.getUser_id();
+//            //根据user_id查询Phoenix用户信息
+//            //将用户信息补充至orderWide
+//            //地区
+//            //SKU
+//            //SPU
+//            //。。。
+//            //返回结果
+//            return orderWide;
+//        });
 
         //TODO 4.1、关联用户维度
+        SingleOutputStreamOperator<OrderWide> orderWideWithUserDS = AsyncDataStream.unorderedWait(
+                orderWideWithNoDimDs,
+                new DimAsyncFunction<OrderWide>("DIM_USER_INFO") {
+                    @Override
+                    public String getKey(OrderWide orderWide) {
+                        return orderWide.getUser_id().toString();
+                    }
+
+                    @Override
+                    public void join(OrderWide orderWide, JSONObject dimInfo) throws ParseException {
+                        orderWide.setUser_gender(dimInfo.getString("GENDER"));
+
+                        String birthday = dimInfo.getString("BIRTHDAY");
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-yy");
+
+                        long currentTs = System.currentTimeMillis();
+                        long ts = sdf.parse(birthday).getTime();
+
+                        long age = (currentTs - ts) / (1000 * 60 * 60 * 24 * 365L);
+
+                        orderWide.setUser_age((int) age);
+                    }
+                },
+                60,
+                TimeUnit.SECONDS);
 
         //TODO 4.2、关联地区维度
 

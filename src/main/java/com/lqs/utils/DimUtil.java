@@ -15,15 +15,15 @@ import java.util.List;
  * @Date 2022年03月09日 21:36:56
  * @Version 1.0.0
  * @ClassName DimUtil
- * @Describe
+ * @Describe 查询维度的工具类
  */
 public class DimUtil {
 
     public static JSONObject getDimInfo(Connection connection, String tableName, String id) throws Exception {
         //查询phoenix之前先查询Redis
         Jedis jedis = RedisUtil.getJedis();
-
-        //DIM:DIM_USER_INFO:143
+        //
+        //DIM:DIM_USER_INFO:1311
         String redisKey = "DIM:" + tableName + ":" + id;
         String dimInfoJsonSte = jedis.get(redisKey);
         if (dimInfoJsonSte != null) {
@@ -48,6 +48,8 @@ public class DimUtil {
         jedis.expire(redisKey, 24 * 60 * 60);
         jedis.close();
 
+        //return queryList.get(0);
+
         //返回结果
         return dimInfoJson;
     }
@@ -65,10 +67,10 @@ public class DimUtil {
 
 //        long start = System.currentTimeMillis();
 
-        System.out.println(getDimInfo(connection, "DIM_BASE_TRADEMARK", "15"));
+        System.out.println(getDimInfo(connection, "DIM_USER_INFO", "1311"));
 
 //        long end = System.currentTimeMillis();
-//        System.out.println(getDimInfo(connection, "DIM_USER_INFO", "143"));
+//        System.out.println(getDimInfo(connection, "DIM_USER_INFO", "1311"));
 //        long end2 = System.currentTimeMillis();
 //        System.out.println(getDimInfo(connection, "DIM_USER_INFO", "143"));
 //        long end3 = System.currentTimeMillis();
