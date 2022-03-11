@@ -53,14 +53,14 @@ public class OrderWideApp {
         String orderDetailSourceTopic = "dwd_order_detail";
         String orderWideSinkTopic = "dwm_order_wide";
         String groupId = "order_wide_group";
-        SingleOutputStreamOperator<OrderInfo> orderInfoDS = executionEnvironment.addSource(MyKafkaUtil.getKafkaConsumer(orderDetailSourceTopic, groupId))
+        SingleOutputStreamOperator<OrderInfo> orderInfoDS = executionEnvironment.addSource(MyKafkaUtil.getKafkaConsumer(orderInfoSourceTopic, groupId))
                 .map(line -> {
                     OrderInfo orderInfo = JSON.parseObject(line, OrderInfo.class);
 
-                    String create_time = orderInfo.getCreate_date();
+                    String create_time = orderInfo.getCreate_time();
                     String[] dateTimeArr = create_time.split(" ");
                     orderInfo.setCreate_date(dateTimeArr[0]);
-                     orderInfo.setCreate_hour(dateTimeArr[1].split(":")[0]);
+                    orderInfo.setCreate_hour(dateTimeArr[1].split(":")[0]);
 
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     orderInfo.setCreate_ts(sdf.parse(create_time).getTime());
