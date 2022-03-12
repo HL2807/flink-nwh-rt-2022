@@ -2,12 +2,10 @@ package com.lqs.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.lqs.common.GmallConfig;
-import org.apache.phoenix.util.JDBCUtil;
 import redis.clients.jedis.Jedis;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -15,10 +13,18 @@ import java.util.List;
  * @Date 2022年03月09日 21:36:56
  * @Version 1.0.0
  * @ClassName DimUtil
- * @Describe 查询维度的工具类
+ * @Describe 查询维度的工具类，使用了
  */
 public class DimUtil {
 
+    /**
+     * 查询维度表的函数
+     * @param connection 链接
+     * @param tableName 需要查询的表名
+     * @param id 要查询的id
+     * @return JSONObject对象
+     * @throws Exception
+     */
     public static JSONObject getDimInfo(Connection connection, String tableName, String id) throws Exception {
         //查询phoenix之前先查询Redis
         Jedis jedis = RedisUtil.getJedis();
@@ -54,6 +60,11 @@ public class DimUtil {
         return dimInfoJson;
     }
 
+    /**
+     * 删除要更新数据的老数据缓存
+     * @param tableName 表名
+     * @param id 要删除的id（要更新的id）
+     */
     public static void delRedisDimInfo(String tableName, String id) {
         Jedis jedis = RedisUtil.getJedis();
         String redisKey = "DIM:" + tableName + ":" + id;
@@ -65,19 +76,19 @@ public class DimUtil {
         Class.forName(GmallConfig.PHOENIX_DRIVER);
         Connection connection = DriverManager.getConnection(GmallConfig.PHOENIX_SERVER);
 
-//        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
 
-        System.out.println(getDimInfo(connection, "DIM_USER_INFO", "1311"));
+        System.out.println(getDimInfo(connection, "DIM_BASE_TRADEMARK", "15"));
 
-//        long end = System.currentTimeMillis();
-//        System.out.println(getDimInfo(connection, "DIM_USER_INFO", "1311"));
-//        long end2 = System.currentTimeMillis();
-//        System.out.println(getDimInfo(connection, "DIM_USER_INFO", "143"));
-//        long end3 = System.currentTimeMillis();
-
-//        System.out.println(end - start);
-//        System.out.println(end2 - end);
-//        System.out.println(end3 - end2);
+        //long end = System.currentTimeMillis();
+        //System.out.println(getDimInfo(connection, "DIM_USER_INFO", "1311"));
+        //long end2 = System.currentTimeMillis();
+        //System.out.println(getDimInfo(connection, "DIM_USER_INFO", "974"));
+        //long end3 = System.currentTimeMillis();
+        //
+        //System.out.println(end - start);
+        //System.out.println(end2 - end);
+        //System.out.println(end3 - end2);
 
         connection.close();
     }

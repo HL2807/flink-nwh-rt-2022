@@ -36,6 +36,7 @@ public abstract class DimAsyncFunction<T> extends RichAsyncFunction<T, T> implem
         Class.forName(GmallConfig.PHOENIX_DRIVER);
         connection = DriverManager.getConnection(GmallConfig.PHOENIX_SERVER);
 
+        //获取异步线程
         threadPoolExecutor = ThreadPoolUtil.getThreadPool();
     }
 

@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
  * @Date 2022年03月11日 23:00:24
  * @Version 1.0.0
  * @ClassName ThreadPoolUtil
- * @Describe
+ * @Describe 优化：异步查询，封装线程池工具类
  */
 public class ThreadPoolUtil {
 

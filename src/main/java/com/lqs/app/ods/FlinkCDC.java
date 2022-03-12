@@ -46,6 +46,7 @@ public class FlinkCDC {
                 //.tableList("gmall2022.base_trademark") //如果不添加该参数，则消费指定数据库中所有表的数据，如果指定，指定方式为db.table
                 .deserializer(new CustomerDeserialization())
                 .startupOptions(StartupOptions.latest())
+                //.startupOptions(StartupOptions.initial())
                 .build();
         DataStreamSource<String> streamSource = executionEnvironment.addSource(sourceFunction);
 

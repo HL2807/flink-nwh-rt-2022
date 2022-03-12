@@ -11,7 +11,7 @@ import java.math.BigDecimal;
  * @Date 2022年03月11日 17:26:47
  * @Version 1.0.0
  * @ClassName OrderWide
- * @Describe
+ * @Describe 订单实体类
  */
 @Data
 @AllArgsConstructor
