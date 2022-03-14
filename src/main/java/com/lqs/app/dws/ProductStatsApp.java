@@ -219,7 +219,7 @@ public class ProductStatsApp {
                     JSONObject jsonObject = JSON.parseObject(line);
 
                     String appraise = jsonObject.getString("appraise");
-                    Long goodCt = 0L;
+                    long goodCt = 0L;
                     if (GmallConstant.APPRAISE_GOOD.equals(appraise)) {
                         goodCt = 1L;
                     }
@@ -320,7 +320,7 @@ public class ProductStatsApp {
                     public void join(ProductStats input, JSONObject dimInfo) throws ParseException {
                         input.setSku_name(dimInfo.getString("SKU_NAME"));
                         input.setSku_price(dimInfo.getBigDecimal("PRICE"));
-                        input.setSku_id(dimInfo.getLong("SPU_ID"));
+                        input.setSpu_id(dimInfo.getLong("SPU_ID"));
                         input.setTm_id(dimInfo.getLong("TM_ID"));
                         input.setCategory3_id(dimInfo.getLong("CATEGORY3_ID"));
                     }
