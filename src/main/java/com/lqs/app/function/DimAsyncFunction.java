@@ -36,12 +36,11 @@ public abstract class DimAsyncFunction<T> extends RichAsyncFunction<T, T> implem
         Class.forName(GmallConfig.PHOENIX_DRIVER);
         connection = DriverManager.getConnection(GmallConfig.PHOENIX_SERVER);
 
-        //获取异步线程
         threadPoolExecutor = ThreadPoolUtil.getThreadPool();
     }
 
     @Override
-    public void asyncInvoke(T input, ResultFuture<T> resultFuture) {
+    public void asyncInvoke(T input, ResultFuture<T> resultFuture) throws Exception {
 
         threadPoolExecutor.submit(new Runnable() {
             @Override
@@ -69,8 +68,9 @@ public abstract class DimAsyncFunction<T> extends RichAsyncFunction<T, T> implem
 
     }
 
+
     @Override
-    public void timeout(T input, ResultFuture<T> resultFuture)  {
+    public void timeout(T input, ResultFuture<T> resultFuture) throws Exception {
         System.out.println("TimeOut:" + input);
     }
 }

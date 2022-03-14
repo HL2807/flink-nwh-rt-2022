@@ -31,14 +31,14 @@ public class DimUtil {
         //
         //DIM:DIM_USER_INFO:1311
         String redisKey = "DIM:" + tableName + ":" + id;
-        String dimInfoJsonSte = jedis.get(redisKey);
-        if (dimInfoJsonSte != null) {
+        String dimInfoJsonStr = jedis.get(redisKey);
+        if (dimInfoJsonStr != null) {
             //重置过期时间
             jedis.expire(redisKey, 24 * 60 * 60);
             //归还连接
             jedis.close();
             //返回结果
-            return JSONObject.parseObject(dimInfoJsonSte);
+            return JSONObject.parseObject(dimInfoJsonStr);
         }
 
         //拼接查询语句
