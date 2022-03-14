@@ -18,7 +18,7 @@ public class GmallConfig {
     public static final String PHOENIX_SERVER = "jdbc:phoenix:nwh120,nwh121,nwh122:2181";
 
     //ClickHouse_Url
-    public static final String CLICKHOUSE_URL = "jdbc:clickhouse://8123:8123/default";
+    public static final String CLICKHOUSE_URL = "jdbc:clickhouse://nwh120:8123/default";
 
     //ClickHouse_Driver
     public static final String CLICKHOUSE_DRIVER = "ru.yandex.clickhouse.ClickHouseDriver";
